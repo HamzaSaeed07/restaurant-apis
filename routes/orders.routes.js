@@ -69,4 +69,20 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ error: 'Error deleting order' });
   }
 });
+
+router.get('/customer/:customerId', async (req, res) => {
+  const { customerId } = req.params;
+
+  try {
+      const orders = await Order.find({ customerId });
+
+      if (!orders || orders.length === 0) {
+          return res.status(404).json({ message: 'No orders found for this customer' });
+      }
+
+      res.status(200).json(orders);
+  } catch (err) {
+      res.status(500).json({ message: 'Error fetching orders', error: err.message });
+  }
+});
 module.exports = router;
